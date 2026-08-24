@@ -32,6 +32,16 @@ npm run lint
 
 `npm test` 会先完成生产构建，再验证首页能正确渲染游戏内容。
 
+## 公网部署
+
+推荐使用 Docker 运行应用，并由宿主机 Nginx 提供域名和 HTTPS：
+
+```bash
+docker compose up -d --build
+```
+
+完整的服务器准备、Nginx、HTTPS、更新和停止步骤见 [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)。生产构建会生成 `dist/standalone/server.js`，容器只将应用绑定到服务器本机的 `127.0.0.1:3000`，应由 Nginx 转发，而不是直接开放该端口。
+
 ## 项目结构
 
 ```text
@@ -40,6 +50,10 @@ app/globals.css    页面布局、棋盘样式和动画
 app/layout.tsx     页面元数据与根布局
 worker/index.ts    Cloudflare/Vinext 运行入口
 tests/             构建后的页面冒烟测试
+Dockerfile         生产镜像
+compose.yaml       容器启动与健康检查
+deploy/            Nginx 示例配置
+docs/              部署和运维文档
 ```
 
 ## 数据存储

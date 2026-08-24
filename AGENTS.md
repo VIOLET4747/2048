@@ -10,6 +10,9 @@ This repository contains a single-page 2048 game built with React, Vinext, and V
 - `app/globals.css`: responsive UI and coordinate-based tile transitions.
 - `worker/index.ts`: Vinext/Cloudflare runtime entry.
 - `tests/rendered-html.test.mjs`: production-render smoke test.
+- `Dockerfile` and `compose.yaml`: production VPS runtime.
+- `deploy/nginx.conf.example`: host-level reverse proxy template.
+- `docs/DEPLOYMENT.md`: operator deployment and update guide.
 
 ## Invariants
 
@@ -23,3 +26,4 @@ This repository contains a single-page 2048 game built with React, Vinext, and V
 ## Validation
 
 Run `npm test` after game or rendering changes. Run `npm run lint` after TypeScript or React changes.
+For production changes, also confirm that `dist/standalone/server.js` is generated and that the standalone server returns HTTP 200.
