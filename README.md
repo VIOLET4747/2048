@@ -34,64 +34,28 @@ npm run lint
 
 ## 公网部署
 
-生产构建会生成 `dist/standalone/server.js`。推荐使用 Docker 运行应用，并由宿主机 Nginx 提供域名和 HTTPS：
+生产构建会生成 `dist/standalone/server.js`。在公网服务器安装 Git 和 Docker 后运行：
 
 ```bash
 git clone https://github.com/VIOLET4747/2048.git
 cd 2048
 docker compose up -d --build
 docker compose ps
-curl -I http://127.0.0.1:3000/
 ```
 
-默认配置为：
-
-```text
-浏览器 → Nginx :80/:443 → 127.0.0.1:3000 → 2048 Docker 容器
-```
-
-应用端口只绑定到服务器本机，公网不能直接访问 `服务器IP:3000`。服务器防火墙只需开放 TCP 80 和 443。
-
-### 临时直接开放 3000 端口
-
-如果只是测试，可以让 Compose 把 3000 端口监听在所有网卡：
-
-```bash
-APP_BIND_ADDRESS=0.0.0.0 docker compose up -d --build
-```
-
-然后在云服务器安全组和系统防火墙中开放 TCP 3000，即可访问：
+默认会在服务器所有网卡上开放 `3000` 端口。在云服务器安全组和系统防火墙中放行 TCP 3000 后，直接访问：
 
 ```text
 http://服务器公网IP:3000/
 ```
 
-这种方式没有 HTTPS，不建议作为正式长期部署。恢复为仅本机监听：
+检查服务器本机是否启动成功：
 
 ```bash
-docker compose down
-docker compose up -d
+curl -I http://127.0.0.1:3000/
 ```
 
-### 配置 Nginx
-
-需要先让域名的 A/AAAA 记录指向服务器公网 IP。复制配置模板并替换其中的 `2048.example.com`：
-
-```bash
-sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/2048
-sudo nano /etc/nginx/sites-available/2048
-sudo ln -s /etc/nginx/sites-available/2048 /etc/nginx/sites-enabled/2048
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-确认 HTTP 能访问后，使用 Certbot 配置 HTTPS：
-
-```bash
-sudo certbot --nginx -d 2048.example.com
-```
-
-将命令中的域名换成自己的真实域名。
+当前方案使用 HTTP，不需要域名、Nginx 或 HTTPS 证书，适合个人试用。不要开放除 SSH 和 3000 以外的不必要端口。
 
 ### 更新、日志与停止
 
@@ -128,7 +92,6 @@ worker/index.ts    Cloudflare/Vinext 运行入口
 tests/             构建后的页面冒烟测试
 Dockerfile         生产镜像
 compose.yaml       容器启动与健康检查
-deploy/            Nginx 示例配置
 ```
 
 ## 数据存储
