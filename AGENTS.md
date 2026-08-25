@@ -12,7 +12,7 @@ This repository contains a single-page 2048 game built with React, Vinext, and V
 - `tests/rendered-html.test.mjs`: production-render smoke test.
 - `Dockerfile` and `compose.yaml`: production VPS runtime.
 - `deploy/nginx.conf.example`: host-level reverse proxy template.
-- `docs/DEPLOYMENT.md`: operator deployment and update guide.
+- `README.md`: setup, direct-port, Nginx, HTTPS, update, and recovery runbook.
 
 ## Invariants
 
